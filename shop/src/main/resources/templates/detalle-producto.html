@@ -9,23 +9,60 @@
 
         <main class="flex-grow-1 py-5">
             <div class="container mt-5">
-                <div class="row">
-                    <div class="col-md-6">
-                        <img th:src="@{'/imagenes/' + ${producto.imagenProducto}}" class=""
-                            alt="Imagen del producto">
+                <div class="row d-flex justify-content-center align-items-center gap-4">
+                    <!-- IMAGEN -->
+                    <div class="col-md-4 d-flex justify-content-center align-items-center h-100">
+                        <img th:src="@{'/imagenes/' + ${producto.imagenProducto}}" class="" alt="Imagen del producto">
                     </div>
-                    <div class="col-md-6">
-                        <h2 th:text="${producto.nombreProducto}"></h2>
-                        <p th:text="${producto.descripcionProducto}"></p>
-                        <h4 th:text="'S/ ' + ${producto.precioProducto}"></h4>
-                        <a th:href="@{/productos}" class="btn btn-secondary">Volver</a>
+                    <!-- Info Producto -->
+                    <div class="col-md-6 border border-1 shadow-sm border-secondary rounded p-4 d-flex flex-column gap-3">
+                        <!-- Nombre | categoria -->
+                        <div class="d-flex flex-column">
+                            <h6 th:text="${producto.categoria.nombreCategoria}" class="text-secondary-emphasis"></h6>
+                            <h2 th:text="${producto.nombreProducto}"></h2>
+                        </div>
+                        <!-- Descripción -->
+                        <div class="d-flex flex-column gap-2">
+                            <h6>Descripción: </h6>
+                            <p th:text="${producto.descripcionProducto}"></p>
+                        </div>
+                        <!-- Precio -->
+                        <div class="d-flex flex-column gap-2">
+                            <h4 th:text="'S/ ' + ${producto.precioProducto}"></h4>
+                        </div>
+                        <!-- Tallas -->
+                        <div class="d-flex flex-column gap-2">
+                            <label class="form-label fw-semibold">Talla:</label>
+                            <select class="form-select" name="tallaSeleccionada" id="tallaSeleccionada" required>
+                                <option value="" disabled selected>Seleccione una talla</option>
+                                <option th:each="tp : ${tallas}" th:value="${tp.talla.idTalla}"
+                                    th:text="${tp.talla.nombreTalla + ' - Stock: ' + tp.stock}"></option>
+                            </select>
+                        </div>
+                        <!-- Cantidad -->
+                        <div class="d-flex flex-column gap-2">
+                            <label class="form-label fw-semibold">Cantidad:</label>
+                            <div class="input-group" style="width: 120px;">
+                                <button class="btn btn-outline-secondary" type="button"
+                                    onclick="modificarCantidad(-1)">-</button>
+                                <input type="number" id="cantidad" name="cantidad" class="form-control text-center"
+                                    value="1" min="1">
+                                <button class="btn btn-outline-secondary" type="button"
+                                    onclick="modificarCantidad(1)">+</button>
+                            </div>
+                        </div>
+                        <!-- Botones -->
+                        <div class="d-flex justify-content-end gap-2 mt-3">
+                            <button class="btn btn-primary">Agregar al Carrito</button>
+                            <a th:href="@{/productos}" class="btn btn-secondary">Volver</a>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="container mt-5">
+            <div class="d-flex flex-column gap-4 container mt-5">
                 <h3>Productos Relacionados</h3>
                 <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4" id="productosRelacionadosLista">
-                    <div th:each="p : ${productos}" class="container">
+                    <!-- <div th:each="p : ${productos}" class="container">
                         <a th:href="@{'/productos/detalle/' + ${p.idProducto}}"
                             style="text-decoration: none; color: inherit;">
                             <div class="card h-100 shadow-sm">
@@ -38,13 +75,14 @@
                                 </div>
                             </div>
                         </a>
-                    </div>
+                    </div> -->
                 </div>
             </div>
         </main>
 
         <footer th:replace="~{components/fragments :: footer}"></footer>
     </section>
+    
 </body>
 
 </html>

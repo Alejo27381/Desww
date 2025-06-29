@@ -16,8 +16,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.shop.entities.Producto;
+import com.example.shop.entities.TallaProducto;
 import com.example.shop.repositories.ProductoRepository;
 import com.example.shop.services.ProductoService;
+import com.example.shop.services.TallaProductoService;
 
 import org.springframework.ui.Model;
 
@@ -26,20 +28,25 @@ import org.springframework.ui.Model;
 public class ProductoController {
 
     private final ProductoRepository productoRepository;
-
+    
     @Autowired
     private final ProductoService productoService;
 
-    public ProductoController(ProductoService productoService, ProductoRepository productoRepository) {
+    @Autowired
+    private final TallaProductoService tallaProductoService;
+
+    public ProductoController(ProductoService productoService, ProductoRepository productoRepository, 
+            TallaProductoService tallaProductoService) {
         this.productoService = productoService;
         this.productoRepository = productoRepository;
+        this.tallaProductoService = tallaProductoService;
     }
 
     @GetMapping
     public String listarProductos(Model model) {
         List<Producto> productos = productoService.listarProductos();
         model.addAttribute("productos", productos);
-        return "productos"; 
+        return "productos";
     }
 
     @GetMapping("/{id}")
@@ -52,9 +59,14 @@ public class ProductoController {
     @GetMapping("/detalle/{id}")
     public String detalleProducto(@PathVariable Long id, Model model) {
         Optional<Producto> productoOptional = productoService.obtenerProductoPorId(id);
+
         if (productoOptional.isPresent()) {
-            model.addAttribute("producto", productoOptional.get());
-            return "detalle-producto"; 
+            Producto producto = productoOptional.get();
+            List<TallaProducto> tallas = tallaProductoService.listarTallaPorProductos(producto.getIdProducto());
+            model.addAttribute("producto", producto);
+            model.addAttribute("tallas", tallas); 
+
+            return "detalle-producto";
         } else {
             return "redirect:/error404";
         }
