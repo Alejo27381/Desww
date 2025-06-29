@@ -1,6 +1,6 @@
 package com.example.shop.controllers;
 
-import com.example.shop.entities.contacto;
+import com.example.shop.entities.Contacto;
 import com.example.shop.repositories.ContactoRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,12 +16,12 @@ public class ContactoController {
 
     @GetMapping("/contactanos")
     public String mostrarFormularioContacto(Model model) {
-        model.addAttribute("contacto", new contacto());
+        model.addAttribute("contacto", new Contacto());
         return "contactanos";
     }
 
     @PostMapping("/contactanos")
-    public String procesarFormularioContacto(@ModelAttribute("Contacto") contacto contacto) {
+    public String procesarFormularioContacto(@ModelAttribute("Contacto") Contacto contacto) {
         contactoRepository.save(contacto);  // ✅ Guarda en la BD
         return "redirect:/contactanos?exito";
     }
