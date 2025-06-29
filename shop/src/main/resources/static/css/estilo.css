@@ -1,3 +1,5 @@
+
+
 body {
     font-family: Arial, Helvetica, sans-serif;
     margin: 0;
@@ -5,85 +7,108 @@ body {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
+    overflow-x: hidden;
 }
+
 
 header {
     display: flex;
     flex-direction: column;
-}
-
-.header-top {
-    background-color: #34495e; /* azul oscuro */
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 20px;
-    color: white;
-}
-
-.main-nav {
-    background-color: #e74c3c; /* rojo */
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    padding: 10px 0;
-}
-
-.main-nav a {
-    color: white;
-    font-weight: bold;
-    text-decoration: none;
-}
-header .icon {
-    display: none;
-    padding-right: 15px;
-    cursor: pointer;
-}
-
-/* CARRO DE COMPRAS */
-
-header .shopping-cart {
-    position: absolute;
-    top: 50%;
-    right: 15px;
-    transform: translateY(-50%);
-    cursor: pointer;
-    width: 35px;
-    height: 35px;
-    line-height: 35px;
-    text-align: center;
-    background: #7F8C8D;
-    border-radius: 7px;
-    font-size: 20px;
-}
-
-nav {
-    background-color: #E74C3C; 
-    padding: 15px 0; 
-    text-align: center;
-    position: sticky;
+    position: fixed;
     top: 0;
-    width: 100%;
-    z-index: 2;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
-    transition: background-color 0.3s ease-in-out;
+    left: 0;
+    right: 0;
+    z-index: 1050;
+    background-color: rgba(33, 37, 41, 0.95);
+    backdrop-filter: blur(10px);
 }
 
-.wrapper, .wrapper-layer {
-    display: none;
+
+.hero {
+    height: 100vh; 
+    background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),
+                url('https://d1ih8jugeo2m5m.cloudfront.net/2024/08/ideas_para_tienda_de_ropa_infantil-1200x685.jpg');
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: white;
+    padding: 76px 1rem 0 1rem; 
+    font-family:'Times New Roman', Times, serif;
+    margin-top: 0; 
 }
+
+
+.container {
+    width: 100%;
+    margin: auto;
+    overflow: hidden;
+    padding-top: 86px; 
+    min-height: calc(100vh - 76px);
+}
+
+
+.content-with-header-spacing {
+    margin-top: 76px;
+}
+
+
+.shopping-cart {
+    position: relative !important;
+    cursor: pointer;
+    z-index: 1051;
+}
+
+
+.wrapper-layer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: none;
+    z-index: 1040;
+}
+
+.wrapper-layer.active {
+    display: block;
+}
+
+.wrapper-layer.active .layer {
+    transform: translateX(0);
+}
+
+.layer {
+    width: 550px;
+    height: 100%;
+    
+    color: white;
+    position: fixed;
+    top: 0;
+    right: 0;
+    transform: translateX(100%);
+    transition: all .3s ease-in-out;
+    font-size: 14px;
+    border-radius: 5px;
+    z-index: 1041;
+    padding-top: 30px;
+}
+
 
 .modal {
     display: none;
     position: fixed;
-    z-index: 1000;
+    z-index: 1055;
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
     overflow: auto;
-    background-color: rgb(0,0,0);
-    background-color: rgba(0,0,0,0.4);
+    background-color: rgba(0, 0, 0, 0.4);
     padding-top: 60px;
 }
 
@@ -95,19 +120,52 @@ nav {
     width: 80%;
     max-width: 500px;
     border-radius: 10px;
+    position: relative;
+    z-index: 1056;
 }
 
-.close, .close-cod {
-    color: #aaa;
-    float: right;
-    font-size: 28px;
+
+.offcanvas {
+    z-index: 1045;
+}
+
+
+.header-top {
+    background-color: #34495e;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    color: white;
+}
+
+.main-nav {
+    background-color: #e74c3c;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    padding: 10px 0;
+}
+
+.main-nav a {
+    color: white;
     font-weight: bold;
+    text-decoration: none;
 }
 
-.close:hover, .close:focus, .close-cod:hover, .close-cod:focus {
-    color: black;
-    text-decoration: none;
+header .icon {
+    display: none;
+    padding-right: 15px;
     cursor: pointer;
+}
+
+nav {
+    background-color: #E74C3C; 
+    padding: 15px 0; 
+    text-align: center;
+    width: 100%;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+    transition: background-color 0.3s ease-in-out;
 }
 
 .sidebar {
@@ -120,21 +178,6 @@ nav {
     left: 0;
     transform: translateX(-100%);
     transition: all .3s ease-in-out;
-}
-
-.layer {
-    width: 550px;
-    height: 100%;
-    background: #7F8C8D;
-    color: white;
-    position: fixed;
-    top: 0;
-    right: 0;
-    transform: translateX(100%);
-    transition: all .3s ease-in-out;
-    font-size: 14px;
-    border-radius: 5px;
-    z-index: 999;
 }
 
 .sidebar h1 {
@@ -184,21 +227,11 @@ nav {
     transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out; 
 } 
 
-
-
-
 .barra {
     background-color:#E74C3C;
     color: #34495E;
     padding: 10px 0;
     text-align: center;
-}
-
-.container {
-    width: 100%;
-    margin: auto;
-    overflow: hidden;
-    padding-top: 10px;
 }
 
 .product {
@@ -221,7 +254,7 @@ nav {
     display: block;
     object-fit: cover;
     border-radius: 10px;
-     border: 3px solid #E74C3C; 
+    border: 3px solid #E74C3C; 
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
     transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out; 
 }
@@ -261,403 +294,92 @@ table thead th, table tbody td {
     padding: 5px 10px;
 }
 
-@media only screen and (max-width: 992px) {
-    header .icon {
-        display: block;
-    }
-
-    nav {
-        display: none;
-    }
-}
-
-@media only screen and (max-width: 600px) {
-    .product {
-        width: 100%;
-    }
-}
-
-.wrapper-layer {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-}
-
-.layer {
-    text-align: center;
-}
-
-input[type="text"] {
-    width: 100%;
-    padding: 12px 20px;
-    margin: 8px 0;
-    box-sizing: border-box;
-    border: 1px solid #34495E;
-    border-radius: 4px;
-    outline: none;
-}
-
-input[type="text"]:focus {
-    border-color: #d86b2c;
-}
-
-/* button[type="submit"] {
-    border: 0;
-    outline: none;
-    background: #E74C3C;
-    height: 35px;
-    color: white;
-    font-weight: bold;
-    font-size: 12px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-button[type="submit"]:hover {
-    background-color: #E74C3C;
-} */
-
-#piedepagina {
-    background-color: #34495E;
-    color: #fff;
-    padding: 20px 0;
-}
-
-.contenedor {
-    max-width: 1200px;
-    margin: 0 auto;
-    text-align: center;
-}
-
-.contenedor ul li a:hover {
-    color: #E74C3C;
-}
-
-.contenedor ul {
-    list-style: none;
-    padding: 0;
-}
-
-.contenedor ul li {
-    display: inline-block;
-    margin: 0 10px;
-}
-
-.contenedor ul li a {
-    color: #fff;
-    text-decoration: none;
-}
-
-.footer-links {
-    text-align: center;
-    color: #fff;
-}
-
-.footer-links h4 {
-    margin-bottom: 10px;
-}
-
-.social-links {
-    margin-bottom: 10px;
-}
-
-.social-links a {
-    color: #fff;
-    margin-right: 10px;
-}
-
-.social-links svg {
-    width: 20px;
-    height: 20px;
-    margin-bottom: -4px;
-}
-
-/* Nosotros */
-/* .adv {
-    display: flex;
-    justify-content: space-between;
-    color: #000000;
-} */
-.cuadro {
-    background-color: #7F8C8D;
-}
-
-.img {
-    flex-direction: row-reverse;
-}
-
-/* Estilo para el botón de agregar al carrito */
-.product button {
-    background-color: #e74c3c;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-.product button:hover {
-    background-color: #c0392b;
-}
-
-/* Estilo para el botón de eliminar */
-.btnEliminar {
-    background-color: #e74c3c;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-.btnEliminar:hover {
-    background-color: #c0392b;
-}
-
-/* Estilo para el botón de pagar */
-#btnPagar {
-    background-color: #28a745;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-top: 20px;
-    transition: background-color 0.3s;
-}
-
-#btnPagar:hover {
-    background-color: #218838;
-}
-
-/* Estilo para la notificación */
-.notification {
-    display: none;
-    position: fixed;
-    top: 10px;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: #28a745;
-    color: white;
-    padding: 10px;
-    border-radius: 5px;
-    z-index: 1000;
-}
-
-.btnEliminar, #btnPagar {
-    background-color: #d9534f;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    cursor: pointer;
-    border-radius: 5px;
-    transition: background-color 0.3s;
-}
-
-.btnEliminar:hover, #btnPagar:hover {
-    background-color: #c9302c;
-}
-
-button {
-    background-color: #d9534f;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    cursor: pointer;
-    border-radius: 5px;
-    transition: background-color 0.3s;
-}
-
-button:hover {
-    background-color: #c9302c;
-}
-
-/*xd*/
-
-.layer {
-    width: 550px;
-    height: 100%;
-    background: #7F8C8D;
-    color: white;
-    position: fixed;
-    top: 0;
-    right: 0;
-    transform: translateX(100%);
-    transition: all .3s ease-in-out;
-    font-size: 14px;
-    border-radius: 5px;
-    z-index: 999;
-}
-
-.modal-content {
-    background-color: #fefefe;
-    margin: 15% auto;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 80%;
-    max-width: 500px;
-    border-radius: 10px;
-}
-
-
-.layer {
-    width: 550px; /* Aumentar el ancho */
-    height: 100%;
-    background: #7F8C8D;
-    color: white;
-    position: fixed;
-    top: 0;
-    right: 0;
-    transform: translateX(100%);
-    transition: all .3s ease-in-out;
-    font-size: 14px;
-    border-radius: 5px;
-    z-index: 999;
-}
-
-.wrapper-layer {
-    position: fixed;
-    top: 0;
-    right: 0;
-    width: 550px; /* Aumentar el ancho */
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: none;
-    z-index: 999;
-}
-
-
 .close-cart {
     position: absolute;
-    top: 10px;
-    right: 10px;
+    top: 15px;
+    right: 15px;
     color: white;
-    font-size: 28px;
+    font-size: 24px;
     font-weight: bold;
     cursor: pointer;
-    z-index: 1001; /* Asegura que esté siempre en el frente */
+    z-index: 1042;
+    background: none;
+    border: none;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background-color 0.3s;
 }
 
-.close-cart:hover,
-.close-cart:focus {
-    color: #000;
-    text-decoration: none;
+.close-cart:hover {
+    background-color: rgba(255, 255, 255, 0.2);
 }
 
-/* Asegúrate de que el contenedor de la capa tiene suficiente padding para no tapar la "X" */
-.layer {
-    padding-top: 30px; /* Añade espacio suficiente para la "X" */
-    width: 550px;
-    height: 100%;
-    background: #7F8C8D;
-    color: white;
-    position: fixed;
-    top: 0;
-    right: 0;
-    transform: translateX(100%);
-    transition: all .3s ease-in-out;
-    font-size: 14px;
-    border-radius: 5px;
-    z-index: 999;
-}
-/*
-.notification {
-    display: none;
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    background-color: #28a745;
-    color: white;
-    padding: 10px;
-    border-radius: 5px;
-    z-index: 1000;
+.layer h2 {
+    margin-top: 40px;
+    margin-bottom: 20px;
+    text-align: center;
+    font-size: 18px;
 }
 
-.success {
-    display: none;
-    position: fixed;
-    top: 15px;
-    right: 20px;
-    transform: translateX(-50%);
-    background-color: #dc3545;
-    color: white;
-    padding: 15px;
-    border-radius: 5px;
-    z-index: 1000;
+.shopping {
+    width: 100%;
+    margin-top: 20px;
 }
 
-.error {
-    background-color: #dc3545;
-    transform: translateX(-50%);
-    display: none;
-    position: fixed;
-    top: 15px;
-    right: 20px;
-    color: white;
-    padding: 15px;
-    border-radius: 5px;
-    z-index: 1000;
+.shopping table {
+    width: 100%;
+    border-collapse: collapse;
 }
-*/
 
+.shopping th,
+.shopping td {
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    font-size: 12px;
+}
+
+.shopping th {
+    background-color: rgba(0, 0, 0, 0.2);
+    font-weight: bold;
+}
+
+.shopping input[type="number"] {
+    width: 50px;
+    padding: 4px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    font-size: 12px;
+}
 
 #homeLink {
     text-decoration: none;
-    color: inherit; /* Mantiene el color del texto */
-    font-size: inherit; /* Mantiene el tamaño del texto */
-    font-family: inherit; /* Mantiene la fuente del texto */
+    color: inherit;
+    font-size: inherit;
+    font-family: inherit;
 }
 
-
-
-/* Estilos base del modal */
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 1000; /* Asegúrate de que el z-index sea alto */
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0, 0, 0, 0.5); /* Fondo oscuro */
-}
-
-/* Contenido del modal */
-.modal-content {
-    background-color: #fff;
-    margin: 10% auto;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 80%;
-    max-width: 500px;
-    position: relative;
-    z-index: 1001;  /* Asegúrate de que el z-index sea alto */
-}
-
-/* Botón cerrar modal */
 .modal-content .btnCerrarModal {
     position: absolute;
     top: 10px;
     right: 10px;
     background-color: transparent;
-    color: #000; /* Asegúrate de que el color sea visible */
+    color: #000;
     border: none;
     font-size: 20px;
     cursor: pointer;
-    padding: 5px; /* Añade padding para hacer el área clickeable más grande */
-    z-index: 1002; /* Asegúrate de que el z-index sea más alto que el del contenido del modal */
+    padding: 5px;
+    z-index: 1057;
 }
 
 .modal-content .btnCerrarModal:hover {
-    color: #555; /* Color al pasar el mouse */
+    color: #555;
 }
 
-/* Estilo del formulario */
 .form-style {
     width: 100%;
     padding: 20px;
@@ -716,22 +438,6 @@ button:hover {
     margin: 5px;
 }
 
-.hero {
-    height: 95vh;
-    background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),
-                url('https://d1ih8jugeo2m5m.cloudfront.net/2024/08/ideas_para_tienda_de_ropa_infantil-1200x685.jpg');
-    background-size: cover;
-    background-position: center;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    color: white;
-    padding: 0 1rem;
-    font-family:'Times New Roman', Times, serif;
-}
-
 .hero h2 {
     font-size: clamp(2rem, 5vw, 3rem);
     margin-bottom: 1rem;
@@ -758,31 +464,14 @@ button:hover {
     background-color: #c0392b;
 }
 
-/* Carrito */
-
-/* Estilo para el botón de agregar al carrito */
-.product button {
-    background-color: #e74c3c;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-.product button:hover {
-    background-color: #c0392b;
-}
-
-/* Estilo para el botón de eliminar */
 .btnEliminar {
     background-color: #e74c3c;
     color: white;
     border: none;
-    padding: 5px 10px;
-    border-radius: 5px;
+    padding: 4px 8px;
+    border-radius: 3px;
     cursor: pointer;
+    font-size: 11px;
     transition: background-color 0.3s;
 }
 
@@ -790,23 +479,24 @@ button:hover {
     background-color: #c0392b;
 }
 
-/* Estilo para el botón de pagar */
 #btnPagar {
-    background-color: #28a745;
+    background-color: #27ae60;
     color: white;
     border: none;
     padding: 10px 20px;
     border-radius: 5px;
     cursor: pointer;
     margin-top: 20px;
+    width: 100%;
+    font-size: 14px;
+    font-weight: bold;
     transition: background-color 0.3s;
 }
 
 #btnPagar:hover {
-    background-color: #218838;
+    background-color: #219a52;
 }
 
-/* Estilo para la notificación */
 .notification {
     display: none;
     position: fixed;
@@ -817,47 +507,16 @@ button:hover {
     color: white;
     padding: 10px;
     border-radius: 5px;
-    z-index: 1000;
+    z-index: 2000;
 }
-
-.btnEliminar, #btnPagar {
-    background-color: #d9534f;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    cursor: pointer;
-    border-radius: 5px;
-    transition: background-color 0.3s;
-}
-
-.btnEliminar:hover, #btnPagar:hover {
-    background-color: #c9302c;
-}
-
-button {
-    background-color: #d9534f;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    cursor: pointer;
-    border-radius: 5px;
-    transition: background-color 0.3s;
-}
-
-button:hover {
-    background-color: #c9302c;
-}
-
-/* ancorHover en panel de admin */
 
 .botonAncor{
     color: white;
 }
+
 .botonAncor:hover{
     color: rgb(201, 201, 201);
 }
-
-/* Login y register */
 
 .bg-login{
     background-color: #ff8800;
@@ -872,8 +531,139 @@ input.form-control {
   box-shadow: none !important;
 }
 
+/* RESPONSIVE */
+@media only screen and (max-width: 992px) {
+    header .icon {
+        display: block;
+    }
+
+    nav {
+        display: none;
+    }
+}
+
+@media only screen and (max-width: 768px) {
+    .hero {
+        height: 100vh; 
+        padding-top: 60px; 
+    }
+    
+    .container {
+        padding-top: 70px; 
+    }
+    
+    .layer {
+        width: 100%;
+    }
+    
+    .wrapper-layer {
+        width: 100%;
+    }
+}
+
+@media only screen and (max-width: 600px) {
+    .product {
+        width: 100%;
+    }
+}
+
 @media (max-width: 767.98px) {
   .no-shadow-md-down {
     box-shadow: none !important;
   }
+}
+
+/* UTILIDADES ADICIONALES */
+.wrapper {
+    display: none;
+}
+
+input[type="text"] {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    box-sizing: border-box;
+    border: 1px solid #34495E;
+    border-radius: 4px;
+    outline: none;
+}
+
+input[type="text"]:focus {
+    border-color: #d86b2c;
+}
+
+#piedepagina {
+    background-color: #34495E;
+    color: #fff;
+    padding: 20px 0;
+}
+
+.contenedor {
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.contenedor ul li a:hover {
+    color: #E74C3C;
+}
+
+.contenedor ul {
+    list-style: none;
+    padding: 0;
+}
+
+.contenedor ul li {
+    display: inline-block;
+    margin: 0 10px;
+}
+
+.contenedor ul li a {
+    color: #fff;
+    text-decoration: none;
+}
+
+.footer-links {
+    text-align: center;
+    color: #fff;
+}
+
+.footer-links h4 {
+    margin-bottom: 10px;
+}
+
+.social-links {
+    margin-bottom: 10px;
+}
+
+.social-links a {
+    color: #fff;
+    margin-right: 10px;
+}
+
+.social-links svg {
+    width: 20px;
+    height: 20px;
+    margin-bottom: -4px;
+}
+
+.cuadro {
+    background-color: #7F8C8D;
+}
+
+.img {
+    flex-direction: row-reverse;
+}
+
+.close, .close-cod {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover, .close:focus, .close-cod:hover, .close-cod:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
 }
