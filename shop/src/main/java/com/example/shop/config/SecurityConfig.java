@@ -35,30 +35,34 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        // Configuracion de seguridad
-        http.csrf(csrf -> csrf.disable())
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/register", "/contactanos/**", "/nosotros", "/login", "/css/**", "/images/**",
-                                "/js/**", "/", "/inicio", "/productos/**", "/imagenes/**")
-                        .permitAll()
-                        .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .anyRequest().authenticated())
-                .formLogin(form -> form
-                        .loginPage("/login")
-                        .defaultSuccessUrl("/", true)
-                        .permitAll())
-                .logout(logout -> logout
-                        .logoutSuccessUrl("/")
-                        .permitAll())
-                .exceptionHandling(ex -> ex.accessDeniedPage("/acceso-denegado"));
-        return http.build();
+public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    http.csrf(csrf -> csrf.disable())
+            .authorizeHttpRequests(auth -> auth
+                    .requestMatchers(
+                        "/register", 
+                        "/contactanos/**", 
+                        "/nosotros", 
+                        "/login", 
+                        "/css/**", 
+                        "/images/**",
+                        "/js/**", 
+                        "/", 
+                        "/inicio", 
+                        "/productos/**", 
+                        "/imagenes/**",
+                        "/api/mercadopago/**" 
+                    ).permitAll()
+                    .requestMatchers("/admin/**").hasRole("ADMIN")
+                    .anyRequest().authenticated())
+            .formLogin(form -> form
+                    .loginPage("/login")
+                    .defaultSuccessUrl("/", true)
+                    .permitAll())
+            .logout(logout -> logout
+                    .logoutSuccessUrl("/")
+                    .permitAll())
+            .exceptionHandling(ex -> ex.accessDeniedPage("/acceso-denegado"));
 
-        // Configuracion para insertar sin que salga error 403(prohibido)
-        // http.csrf().disable()
-        // .authorizeHttpRequests()
-        // .anyRequest().permitAll();
-
-        // return http.build();
-    }
+    return http.build();
+}
 }
