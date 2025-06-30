@@ -12,6 +12,7 @@ import java.util.List;
 public class MercadoPagoService {
 
     @Value("${mercadopago.access.token}")
+    
     private String accessToken;
 
     public Preference crearPreferencia(List<PreferenceItemRequest> items) throws Exception {
