@@ -6,6 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.shop.entities.Usuario;
 import com.example.shop.services.UsuarioService;
@@ -28,9 +29,10 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public String registrarUsuario(@ModelAttribute Usuario usuario) {
+    public String registrarUsuario(@ModelAttribute Usuario usuario, RedirectAttributes redirectAttributes) {
         usuarioService.registrarNuevoUsuario(usuario);
-        return "redirect:/index";
+        redirectAttributes.addFlashAttribute("nombreUsuario", usuario.getNombre());
+        return "redirect:/";
     }
 
 }

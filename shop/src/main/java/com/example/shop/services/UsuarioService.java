@@ -6,13 +6,13 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.example.shop.config.UsuarioDetails;
 import com.example.shop.entities.Usuario;
 import com.example.shop.repositories.UsuarioRepository;
 
@@ -25,13 +25,9 @@ public class UsuarioService implements UserDetailsService {
     // Crear usuario por login / register
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        Usuario usuario = usuarioRepository.findByEmail(email).orElseThrow(
-                () -> new UsernameNotFoundException("Usuario no encontrado"));
-        return User.builder()
-                .username(usuario.getEmail())
-                .password(usuario.getContraseña())
-                .roles(usuario.getRol())
-                .build();
+        Usuario usuario = usuarioRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
+        return new UsuarioDetails(usuario);
     }
 
     public void registrarNuevoUsuario(Usuario usuario) {
@@ -84,7 +80,7 @@ public class UsuarioService implements UserDetailsService {
     }
 
     // Eliminar usuario
-    public void eliminarUsuario(Long id){
+    public void eliminarUsuario(Long id) {
         usuarioRepository.deleteById(id);
     }
 }
