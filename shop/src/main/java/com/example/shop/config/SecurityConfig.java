@@ -35,34 +35,34 @@ public class SecurityConfig {
     }
 
     @Bean
-public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-    http.csrf(csrf -> csrf.disable())
-            .authorizeHttpRequests(auth -> auth
-                    .requestMatchers(
-                        "/register", 
-                        "/contactanos/**", 
-                        "/nosotros", 
-                        "/login", 
-                        "/css/**", 
-                        "/images/**",
-                        "/js/**", 
-                        "/", 
-                        "/inicio", 
-                        "/productos/**", 
-                        "/imagenes/**",
-                        "/api/mercadopago/**" 
-                    ).permitAll()
-                    .requestMatchers("/admin/**").hasRole("ADMIN")
-                    .anyRequest().authenticated())
-            .formLogin(form -> form
-                    .loginPage("/login")
-                    .defaultSuccessUrl("/", true)
-                    .permitAll())
-            .logout(logout -> logout
-                    .logoutSuccessUrl("/")
-                    .permitAll())
-            .exceptionHandling(ex -> ex.accessDeniedPage("/acceso-denegado"));
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http.csrf(csrf -> csrf.disable())
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(
+                                "/register",
+                                "/contactanos/**",
+                                "/nosotros",
+                                "/login",
+                                "/css/**",
+                                "/images/**",
+                                "/js/**",
+                                "/",
+                                "/inicio",
+                                "/productos/**",
+                                "/imagenes/**",
+                                "/api/mercadopago/**")
+                        .permitAll()
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
+                        .anyRequest().authenticated())
+                .formLogin(form -> form
+                        .loginPage("/login")
+                        .defaultSuccessUrl("/", true)
+                        .permitAll())
+                .logout(logout -> logout
+                        .logoutSuccessUrl("/")
+                        .permitAll())
+                .exceptionHandling(ex -> ex.accessDeniedPage("/acceso-denegado"));
 
-    return http.build();
-}
+        return http.build();
+    }
 }
