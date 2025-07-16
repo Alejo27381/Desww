@@ -7,19 +7,22 @@
     <section class="d-flex flex-column min-vh-100">
         <header th:replace="~{components/fragments :: header}"></header>
 
-        <main class="flex-grow-1 py-5">
-            <div class="container mt-5">
+        <main class="flex-grow-1 mb-5">
+            <div class="container">
                 <div class="row d-flex justify-content-center align-items-center gap-4">
                     <!-- IMAGEN -->
                     <div class="col-md-4 d-flex justify-content-center align-items-center h-100">
-                        <img th:src="@{'/imagenes/' + ${producto.imagenProducto}}" class="" alt="Imagen del producto">
+                        <img th:src="@{'/imagenes/' + ${producto.imagenProducto}}" th:alt="${producto.nombreProducto}"
+                        style="height: 500px; width: 425px;" class="img-fluid">
                     </div>
                     <!-- Info Producto -->
-                    <div class="col-md-6 border border-1 shadow-sm border-secondary rounded p-4 d-flex flex-column gap-3">
+                    <div
+                        class="col-md-6 border border-1 shadow-sm border-secondary rounded p-4 d-flex flex-column gap-3">
                         <!-- Nombre | categoria -->
                         <div class="d-flex flex-column">
                             <h6 th:text="${producto.categoria.nombreCategoria}" class="text-secondary-emphasis"></h6>
                             <h2 th:text="${producto.nombreProducto}" id="nombreProducto"></h2>
+                            <input type="hidden" id="productoId" th:value="${producto.idProducto}" />
                         </div>
                         <!-- Descripción -->
                         <div class="d-flex flex-column gap-2">
@@ -35,16 +38,10 @@
                             <label class="form-label fw-semibold">Talla:</label>
                             <select class="form-select" name="tallaSeleccionada" id="tallaSeleccionada" required>
                                 <option value="" disabled selected>Seleccione una talla</option>
-                                <option value="1" data-stock="15" data-nombre-talla="S">S - Stock: 15</option>
-                                <option value="2" data-stock="20" data-nombre-talla="M">M - Stock: 20</option>
-                                <option value="3" data-stock="12" data-nombre-talla="L">L - Stock: 12</option>
-                                <!-- Para mantener compatibilidad con Thymeleaf si se necesita -->
-                                <!--
                                 <option th:each="tp : ${tallas}" th:value="${tp.talla.idTalla}"
-                                    th:text="${tp.talla.nombreTalla + ' - Stock: ' + tp.stock}"
-                                    th:data-stock="${tp.stock}"
-                                    th:data-nombre-talla="${tp.talla.nombreTalla}"></option>
-                                -->
+                                    th:data-stock="${tp.stock}" th:data-nombre-talla="${tp.talla.nombreTalla}"
+                                    th:data-id-talla="${tp.talla.idTalla}" th:text="${tp.talla.nombreTalla + ' - Stock: ' + tp.stock}">
+                                </option>
                             </select>
                         </div>
                         <!-- Cantidad -->
@@ -61,29 +58,11 @@
                         </div>
                         <!-- Botones -->
                         <div class="d-flex justify-content-end gap-2 mt-3">
-                            <button class="btn btn-primary" id="btnAgregarCarrito" onclick="agregarAlCarrito()">Agregar al Carrito</button>
+                            <button class="btn btn-primary" id="btnAgregarCarrito" onclick="agregarAlCarrito()">Agregar
+                                al Carrito</button>
                             <a th:href="@{/productos}" class="btn btn-secondary">Volver</a>
                         </div>
                     </div>
-                </div>
-            </div>
-            <div class="d-flex flex-column gap-4 container mt-5">
-                <h3>Productos Relacionados</h3>
-                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4" id="productosRelacionadosLista">
-                    <!-- <div th:each="p : ${productos}" class="container">
-                        <a th:href="@{'/productos/detalle/' + ${p.idProducto}}"
-                            style="text-decoration: none; color: inherit;">
-                            <div class="card h-100 shadow-sm">
-                                <img th:src="@{'/imagenes/' + ${p.imagenProducto}}"
-                                    class="card-img-top object-fit-cover" style="height: 400px; width: 100%;"
-                                    th:alt="${p.nombreProducto}">
-                                <div class="card-body">
-                                    <h5 class="card-title fw-bold" th:text="${p.nombreProducto}"></h5>
-                                    <p class="card-text" th:text="${p.descripcionProducto}"></p>
-                                </div>
-                            </div>
-                        </a>
-                    </div> -->
                 </div>
             </div>
         </main>
@@ -91,6 +70,58 @@
         <footer th:replace="~{components/fragments :: footer}"></footer>
     </section>
     
+    <!-- Carrito Modal -->
+    <div class="wrapper-layer" style="display: none;">
+        <div class="layer">
+            <span class="close-cart">&times;</span>
+            <table class="shopping">
+                <thead>
+                    <th>Producto</th>
+                    <th>Descripción</th>
+                    <th>Precio</th>
+                    <th>Cantidad</th>
+                    <th>Eliminar</th>
+                </thead>
+                <tbody></tbody>
+            </table>
+            <button id="btnPagar">Proceder a pago</button>
+        </div>
+    </div>
+
+    <div id="modalOpcionesPago" class="modal" style="display: none;">
+        <div class="modal-content">
+            <button id="btnCerrarOpcionesPago" class="btnCerrarModal"><i class="fas fa-times"></i></button>
+            <div class="payment-buttons"></div>
+            <div id="paypal-button-container"></div>
+        </div>
+    </div>
+
+    <!-- Modal de pago simulado -->
+    <div class="modal fade" id="modalPago" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content p-4">
+                <h5 class="modal-title">Pago con tarjeta</h5>
+                <div class="modal-body">
+
+                    <input type="text" id="nombreCliente" placeholder="Nombre completo" class="form-control mb-2"
+                        required>
+                    <input type="text" id="direccion" placeholder="Dirección" class="form-control mb-2" required>
+                    <input type="text" id="telefono" placeholder="Teléfono" class="form-control mb-2" required>
+
+
+                    <input type="text" id="numeroTarjeta" placeholder="Número de tarjeta" class="form-control mb-2"
+                        required>
+                    <input type="text" id="cci" placeholder="CCI" class="form-control mb-2" required>
+                    <input type="text" id="titular" placeholder="Nombre del titular" class="form-control mb-2" required>
+                    <input type="month" id="vencimiento" class="form-control mb-2" required>
+
+                    <button id="btnProcesarPago" class="btn btn-success w-100">Procesar Pago</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div th:replace="~{components/fragments :: scripts}"></div>
 </body>
 
 </html>

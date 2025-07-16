@@ -1,12 +1,14 @@
 package com.example.shop.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.security.core.Authentication;
 
 import com.example.shop.entities.Usuario;
 import com.example.shop.services.UsuarioService;
@@ -29,10 +31,16 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public String registrarUsuario(@ModelAttribute Usuario usuario, RedirectAttributes redirectAttributes) {
+    public String registrarUsuario(@ModelAttribute Usuario usuario) {
         usuarioService.registrarNuevoUsuario(usuario);
-        redirectAttributes.addFlashAttribute("nombreUsuario", usuario.getNombre());
-        return "redirect:/";
+        return "redirect:/index";
+    }
+
+    @GetMapping("/api/auth/user")
+    @ResponseBody
+    public String obtenerUsuarioAutenticado() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        return auth.getName(); // Devuelve el email del usuario autenticado
     }
 
 }

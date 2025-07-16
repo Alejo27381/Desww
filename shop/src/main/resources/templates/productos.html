@@ -4,63 +4,112 @@
 <head th:replace="~{components/fragments :: cabecera('Toke Inka - Producto')}"></head>
 
 <body>
-    <section class="d-flex flex-column min-vh-100">
-        <header th:replace="~{components/fragments :: header}"></header>
+  <section class="d-flex flex-column min-vh-100">
+    <header th:replace="~{components/fragments :: header}"></header>
 
-        <main class="flex-grow-1">
-            <div class="container">
-                <!-- Título de la sección -->
-                <div class="row mb-4">
-                    <div class="col-12">
-                        <h2 class="text-center fw-bold">Nuestros Productos</h2>
-                        <hr class="mx-auto" style="width: 100px;">
-                    </div>
+    <main class="flex-grow-1 mb-5">
+      <div class="container">
+        <!-- Título de la sección -->
+        <div class="row mb-4">
+          <div class="col-12">
+            <h2 class="text-center fw-bold">Nuestros Productos</h2>
+            <hr class="mx-auto" style="width: 100px;">
+          </div>
+        </div>
+
+        <!-- Busqueda y Filtros -->
+        <div class="row mb-4 g-2 justify-content-center">
+          <div class="col-md-8">
+            <form th:action="@{/productos/filtrar}" method="get" class="input-group shadow-sm rounded d-flex gap-1">
+              <input class="form-control" type="search" name="filtro"
+                placeholder="Buscar productos por nombre o categoría..." aria-label="Buscar productos"
+                th:value="${param.filtro}" autocomplete="off" />
+              <button class="btn btn-index d-flex justify-content-center align-items-center gap-2 px-3 py-lg-3 py-2"
+                type="submit" title="Buscar">
+                <i class="bi bi-search"></i>
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4" id="productosLista">
+          <div th:each="p : ${productos}" class="col producto">
+            <div class="card h-100 shadow-sm">
+              <img th:src="@{'/imagenes/' + ${p.imagenProducto}}" class="card-img-top object-fit-cover"
+                style="height: 400px; width: 100%;" th:alt="${p.nombreProducto}">
+              <div class="card-body">
+                <h5 class="card-title fw-bold" th:text="${p.nombreProducto}"></h5>
+                <p class="card-text" th:text="${p.descripcionProducto}"></p>
+                <div class="d-flex justify-content-between align-items-center">
+                  <span class="h5 mb-0" th:text="'S/. ' + ${p.precioProducto}"></span>
+                  <div class="d-flex gap-2">
+                    <a th:href="@{'/productos/detalle/' + ${p.idProducto}}" class="btn btn-outline-secondary btn-sm">
+                      <i class="bi bi-eye"></i> Ver detalles
+                    </a>
+                  </div>
                 </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
 
-                <!-- Busqueda y Filtros -->
-                <div class="row mb-4 g-2 justify-content-center">
-                    <div class="col-md-8 ">
-                        <form th:action="@{/productos/filtrar}" method="get"
-                            class="input-group shadow-sm rounded d-flex gap-1">
-                            <input class="form-control" type="search" name="filtro"
-                                placeholder="Buscar productos por nombre o categoría..." aria-label="Buscar productos"
-                                th:value="${param.filtro}" autocomplete="off" />
-                            <button
-                                class="btn btn-index d-flex justify-content-center align-items-center gap-2 px-3 py-lg-3 py-2"
-                                type="submit" title="Buscar">
-                                <i class="bi bi-search"></i>
-                            </button>
-                        </form>
-                    </div>
-                </div>
+    <footer th:replace="~{components/fragments :: footer}"></footer>
+  </section>
 
-                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4" id="productosLista">
-                    <div th:each="p : ${productos}" class="col producto">
-                        <div class="card h-100 shadow-sm">
-                            <img th:src="@{'/imagenes/' + ${p.imagenProducto}}" class="card-img-top object-fit-cover"
-                                style="height: 400px; width: 100%;" th:alt="${p.nombreProducto}">
-                            <div class="card-body">
-                                <h5 class="card-title fw-bold" th:text="${p.nombreProducto}"></h5>
-                                <p class="card-text" th:text="${p.descripcionProducto}"></p>
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <span class="h5 mb-0" th:text="'S/. ' + ${p.precioProducto}"></span>
-                                    <div class="d-flex gap-2">
-                                        <a th:href="@{'/productos/detalle/' + ${p.idProducto}}"
-                                            class="btn btn-outline-secondary btn-sm">
-                                            <i class="bi bi-eye"></i> Ver detalles
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+  <!-- Carrito Modal -->
+    <div class="wrapper-layer" style="display: none;">
+        <div class="layer">
+            <span class="close-cart">&times;</span>
+            <table class="shopping">
+                <thead>
+                    <th>Producto</th>
+                    <th>Descripción</th>
+                    <th>Precio</th>
+                    <th>Cantidad</th>
+                    <th>Eliminar</th>
+                </thead>
+                <tbody></tbody>
+            </table>
+            <button id="btnPagar">Proceder a pago</button>
+        </div>
+    </div>
+
+    <div id="modalOpcionesPago" class="modal" style="display: none;">
+        <div class="modal-content">
+            <button id="btnCerrarOpcionesPago" class="btnCerrarModal"><i class="fas fa-times"></i></button>
+            <div class="payment-buttons"></div>
+            <div id="paypal-button-container"></div>
+        </div>
+    </div>
+
+    <!-- Modal de pago simulado -->
+    <div class="modal fade" id="modalPago" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content p-4">
+                <h5 class="modal-title">Pago con tarjeta</h5>
+                <div class="modal-body">
+
+                    <input type="text" id="nombreCliente" placeholder="Nombre completo" class="form-control mb-2"
+                        required>
+                    <input type="text" id="direccion" placeholder="Dirección" class="form-control mb-2" required>
+                    <input type="text" id="telefono" placeholder="Teléfono" class="form-control mb-2" required>
+
+
+                    <input type="text" id="numeroTarjeta" placeholder="Número de tarjeta" class="form-control mb-2"
+                        required>
+                    <input type="text" id="cci" placeholder="CCI" class="form-control mb-2" required>
+                    <input type="text" id="titular" placeholder="Nombre del titular" class="form-control mb-2" required>
+                    <input type="month" id="vencimiento" class="form-control mb-2" required>
+
+                    <button id="btnProcesarPago" class="btn btn-success w-100">Procesar Pago</button>
                 </div>
             </div>
-        </main>
+        </div>
+    </div>
 
-        <footer th:replace="~{components/fragments :: footer}"></footer>
-    </section>
-
+    <div th:replace="~{components/fragments :: scripts}"></div>
 </body>
 
 </html>

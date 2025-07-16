@@ -1,4 +1,19 @@
 $(document).ready(function () {
+    fetch("/api/auth/user")
+        .then(response => {
+            if (response.ok) {
+                return response.text();
+            } else {
+                throw new Error("No autenticado");
+            }
+        })
+        .then(email => {
+            localStorage.setItem("authUser", email);
+        })
+        .catch(() => {
+            localStorage.removeItem("authUser");
+        });
+
     var carrito = JSON.parse(localStorage.getItem('carrito')) || [];
     var totalAmount = 0;
 
@@ -141,12 +156,31 @@ $(document).ready(function () {
 
     // Función para agregar al carrito específica del detalle
     window.agregarAlCarrito = function () {
-        var tallaSelect = document.getElementById('tallaSeleccionada');
-        var cantidadInput = document.getElementById('cantidad');
+        const usuario = localStorage.getItem("authUser");
+        if (!usuario) {
+            Swal.fire({
+                title: "Debes iniciar sesión",
+                text: "Para agregar productos al carrito, por favor inicia sesión o regístrate.",
+                icon: "info",
+                showCancelButton: true,
+                confirmButtonText: "Iniciar sesión",
+                cancelButtonText: "Cancelar"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = "/login"; 
+                }
+            });
+            return;
+        }
+        const tallaSelect = document.getElementById('tallaSeleccionada');
+        const cantidadInput = document.getElementById('cantidad');
+        const nombreProduct = document.getElementById('nombreProducto');
+        const descripcionProduct = document.getElementById('descripcionProducto');
+        const precioProducto = document.getElementById('precioProducto');
 
-
-        if (!tallaSelect.value) {
-            mostrarNotificacion('Por favor selecciona una talla', 'warning');
+        // Validar que se haya seleccionado una talla
+        if (!tallaSelect || !cantidadInput || !nombreProduct || !descripcionProduct || !precioProducto) {
+            console.warn("🔍 Elementos del DOM no encontrados. ¿Estás en la vista correcta?");
             return;
         }
 
@@ -160,10 +194,10 @@ $(document).ready(function () {
             return;
         }
 
-
-        var nombreProducto = document.getElementById('nombreProducto').textContent;
-        var descripcionProducto = document.getElementById('descripcionProducto').textContent;
-        var precioTexto = document.getElementById('precioProducto').textContent;
+        // Obtener datos del producto
+        var nombreProducto = nombreProduct.textContent;
+        var descripcionProducto = descripcionProduct.textContent;
+        var precioTexto = precioProducto.textContent;
         var precio = precioTexto.replace('S/ ', '');
         var nombreTalla = opcionSeleccionada.getAttribute('data-nombre-talla');
 
@@ -189,10 +223,12 @@ $(document).ready(function () {
                 product: productId,
                 description: descripcionCompleta,
                 price: precio,
-                codigo: 'PROD-' + Date.now(), // Generar código único
+                codigo: 'PROD-' + Date.now(),
                 cantidad: cantidad,
                 talla: nombreTalla,
-                stock: stockDisponible
+                stock: stockDisponible,
+                idProducto: parseInt(document.getElementById("productoId").value), 
+                idTalla: parseInt(opcionSeleccionada.getAttribute("data-id-talla")) 
             });
         }
 
@@ -206,7 +242,7 @@ $(document).ready(function () {
         cantidadInput.value = '1';
     };
 
-
+    // Validar cantidad cuando cambia la talla
     $('#tallaSeleccionada').change(function () {
         var opcionSeleccionada = this.options[this.selectedIndex];
         var stockDisponible = parseInt(opcionSeleccionada.getAttribute('data-stock'));
@@ -217,11 +253,11 @@ $(document).ready(function () {
             mostrarNotificacion('Cantidad ajustada al stock disponible: ' + stockDisponible, 'info');
         }
 
-
+        // Actualizar el atributo max del input
         cantidadInput.setAttribute('max', stockDisponible);
     });
 
-
+    // Validar cantidad cuando se escribe directamente
     $('#cantidad').on('input', function () {
         var tallaSeleccionada = document.getElementById('tallaSeleccionada');
         if (tallaSeleccionada.value) {
@@ -239,7 +275,7 @@ $(document).ready(function () {
         }
     });
 
-
+    // Botón pagar
     $('#btnPagar').click(function () {
         if (carrito.length === 0) {
             mostrarNotificacion('Tu carrito está vacío', 'info');
@@ -248,12 +284,12 @@ $(document).ready(function () {
         }
     });
 
-
+    // Cerrar modales
     $('.btnCerrarModal').click(function () {
         $(this).closest('.modal').fadeOut();
     });
 
-
+    // Formulario de entrega
     $('#codForm').submit(function (e) {
         e.preventDefault();
         $('#modalPagoEntrega').fadeOut(100);
@@ -272,24 +308,24 @@ $(document).ready(function () {
         }, 50);
     });
 
-
+    // Cerrar carrito al hacer clic en el overlay
     $('.wrapper-layer').click(function (e) {
         if ($(e.target).is('.wrapper-layer')) {
             cerrarCarrito();
         }
     });
 
-
+    // Prevenir que el clic dentro del carrito lo cierre
     $('.wrapper-layer .layer').click(function (e) {
         e.stopPropagation();
     });
 
-
+    // Botón cerrar carrito
     $('.close-cart').click(function () {
         cerrarCarrito();
     });
 
-
+    // Función para cerrar carrito
     function cerrarCarrito() {
         $('.wrapper-layer .layer').css({ 'transform': 'translateX(100%)' });
         setTimeout(function () {
@@ -297,26 +333,26 @@ $(document).ready(function () {
         }, 300);
     }
 
-
+    // Cerrar carrito con tecla Escape
     $(document).keydown(function (event) {
         if (event.key === "Escape") {
             cerrarCarrito();
         }
     });
 
-
+    // Cerrar modales al hacer clic fuera
     $(document).click(function (event) {
         if ($(event.target).hasClass('modal')) {
             $(event.target).fadeOut();
         }
     });
 
-
+    // Botón cerrar opciones de pago
     $('#btnCerrarOpcionesPago').click(function () {
         $('#modalOpcionesPago').fadeOut();
     });
 
-
+    // Inicializar la UI del carrito
     actualizarCarritoUI();
     actualizarContadorCarrito();
 });
